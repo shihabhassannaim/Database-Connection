@@ -13,7 +13,6 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
   },
   posts: [
     {
@@ -27,7 +26,6 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
   },
   fullname: {
     type: String,

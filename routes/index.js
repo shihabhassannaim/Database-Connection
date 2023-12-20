@@ -5,34 +5,41 @@ const UserModel = require("./users");
 const passport = require("passport");
 
 const localStrategy = require("passport-local");
-passport.authenticate(new localStrategy(UserModel.authenticate()));
+passport.use(new localStrategy(UserModel.authenticate()));
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
+  res.render("index");
+});
+
+router.get("/login", function (req, res, next) {
+  res.render("login", { error: req.flash("error") });
+});
+router.get("/feed", function (req, res, next) {
+  res.render("feed");
 });
 
 router.get("/profile", isLoggedIn, function (req, res, next) {
-  res.send("profile");
+  res.render("profile");
 });
 
-router.post("/register"),
-  function (req, res) {
-    const { username, email, fullname } = req.body;
-    const userData = new UserModel({ username, email, fullname });
+router.post("/register", function (req, res) {
+  const { username, email, fullname } = req.body;
+  const userData = new UserModel({ username, email, fullname });
 
-    UserModel.register(userData, req.body.password).then(function () {
-      passpost.authenticate("local")(req, res, function () {
-        res.redirect("/profile");
-      });
+  UserModel.register(userData, req.body.password).then(function () {
+    passport.authenticate("local")(req, res, function () {
+      res.redirect("/profile");
     });
-  };
+  });
+});
 
 router.post(
   "/login",
   passport.authenticate("local", {
     successRedirect: "/profile",
-    failureRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: true,
   }),
   function (req, res) {}
 );
@@ -41,13 +48,13 @@ router.get("/logout", function (req, res) {
     if (err) {
       return next(err);
     }
-    res.redirect("/");
+    res.redirect("/login");
   });
 });
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) return next();
-  res.redirect("/");
+  res.redirect("/login");
 }
 
 module.exports = router;
