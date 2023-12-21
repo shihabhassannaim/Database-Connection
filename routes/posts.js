@@ -1,16 +1,17 @@
-const mongoose = require('mongoose');
-
-
+const mongoose = require("mongoose");
 
 // Define the schema for the post
 const postSchema = new mongoose.Schema({
-  postText: {
+  imagetext: {
     type: String,
     required: true,
   },
+  image: {
+    type: String,
+  },
   user: {
-    type: mongoose.Schema.Types.ObjectId ,
-    ref:"User",
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
   currentDate: {
     type: Date,
@@ -21,7 +22,7 @@ const postSchema = new mongoose.Schema({
     default: getTimeString,
   },
   likes: {
-    type: Array ,
+    type: Array,
     default: [],
   },
 });
@@ -29,12 +30,12 @@ const postSchema = new mongoose.Schema({
 // Helper function to get the current time in HH:MM format
 function getTimeString() {
   const now = new Date();
-  const hours = now.getHours().toString().padStart(2, '0');
-  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const hours = now.getHours().toString().padStart(2, "0");
+  const minutes = now.getMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
 }
 
 // Create the Mongoose model for the post
-const Post = mongoose.model('Post', postSchema);
+const Post = mongoose.model("Post", postSchema);
 
 module.exports = Post;

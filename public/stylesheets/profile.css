@@ -63,3 +63,9 @@ body {
 .button:hover {
   background-color: #7b0012;
 }
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: start;
+}
